@@ -1,0 +1,11 @@
+{
+  "port": 3005,
+  "DB": {
+    "host": "192.168.1.2",
+    "username": "kodi",
+    "password": "kodi",
+    "port": "3306",
+    "table": "games"
+  },
+  "debug": true
+}

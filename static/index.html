@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <style>
+        .teamContainer {
+            top: 0;
+            padding-top: 5px;
+            display: flex;
+            width: 50%;
+            height: 100%;
+            justify-content: center;
+            position:absolute;
+            text-align: center !Important;
+        }
+
+        .headerContainer {
+            width: 100%;
+            justify-content: center;
+            position:absolute;
+            text-align: center !Important;
+            z-index: 99;
+        }
+
+        .input {
+            text-align: center !Important;
+        }
+
+        #team1 {
+            left: 0;
+        }
+
+        #team2 {
+            right: 0;
+        }
+
+        body {
+            background: #2d2d2d;
+            color: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+            'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+            sans-serif;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="headerContainer">
+        <div>
+            <button onclick="newGame()">New Game</button>
+        </div>
+    </div>
+    <div id="team1" class="teamContainer">
+        <div>
+            <input type="text" id="team1Name" class="input" value="Anthony">
+            <h1 id="team1Score">0</h1>
+            <h1 id="team1WinnerText"></h1>
+            <button onclick="incrementScore(0)">Add 1</button>
+            <button onclick="decrementScore(0)">Remove 1</button>
+        </div>
+    </div>
+    <div id="team2" class="teamContainer">
+        <div>
+            <input type="text" id="team2Name" class="input" value="Caleb">
+            <h1 id="team2Score">0</h1>
+            <h1 id="team2WinnerText"></h1>
+            <button onclick="incrementScore(1)">Add 1</button>
+            <button onclick="decrementScore(1)">Remove 1</button>
+        </div>
+    </div>
+<script>
+    let scores = [0,0];
+
+    function newGame() {
+        scores = [0,0]
+        refresh()
+    }
+
+    function refresh() {
+        document.getElementById("team1Score").innerText = scores[0];
+        document.getElementById("team2Score").innerText = scores[1];
+
+        document.getElementById("team1WinnerText").innerText = ""
+        document.getElementById("team2WinnerText").innerText = ""
+
+        document.getElementById("team1").style.background = ""
+        document.getElementById("team2").style.background = ""
+
+        if (scores[0] > 14 && scores[0]-scores[1] > 1) {
+            reportGame(1)
+            document.getElementById("team1WinnerText").innerText = "Winner!"
+            document.getElementById("team1").style.background = "#0F0"
+            document.getElementById("team2").style.background = "#F00"
+        } else if (scores[1] > 14 && scores[1]-scores[0] > 1) {
+            reportGame(2)
+            document.getElementById("team2WinnerText").innerText = "Winner!"
+            document.getElementById("team1").style.background = "#F00"
+            document.getElementById("team2").style.background = "#0F0"
+        }
+    }
+
+    function reportGame(winner) {
+        let data = new URLSearchParams()
+        data.append("team1Name", document.getElementById("team1Name").value)
+        data.append("team2Name", document.getElementById("team2Name").value)
+        data.append("team1Score", scores[0])
+        data.append("team2Score", scores[1])
+        data.append("winner", winner)
+
+        fetch('/reportGame', {
+            method: 'POST',
+            body: data
+        })
+    }
+
+    function incrementScore(index) {
+        scores[index]++
+        refresh()
+    }
+
+    function decrementScore(index) {
+        scores[index]--
+        refresh()
+    }
+</script>
+</body>
+</html>
